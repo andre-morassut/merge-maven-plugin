@@ -7,8 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -23,176 +24,150 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class MergeMojo extends AbstractMojo {
 
-    /**
-     * Configuration from file
-     *
-     * <pre>
-     * &lt;mergers&gt;
-     * &nbsp;&nbsp;&lt;merge&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&lt;target&gt;${build.outputDirectory}/target.txt&lt;/target&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&lt;sources&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/${property}/application.txt&lt;/source&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/extended/application.txt&lt;/source&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/default/application.txt&lt;/source&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;
-     * &nbsp;&nbsp;&nbsp;&nbsp;&lt;rewriteNewlines&gt;${newline.character}&lt;/rewriteNewlines&gt;
-     * &nbsp;&nbsp;&lt;/merge&gt;
-     * &lt;/mergers&gt;
-     * </pre>
-     *
-     * @required
-     * @parameter
-     */
-    private transient Merger[] mergers;
+	/**
+	 * Configuration from file
+	 *
+	 * <pre>
+	 * &lt;mergers&gt;
+	 * &nbsp;&nbsp;&lt;merge&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;target&gt;${build.outputDirectory}/target.txt&lt;/target&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;sources&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/${property}/application.txt&lt;/source&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/extended/application.txt&lt;/source&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/default/application.txt&lt;/source&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;rewriteNewlines&gt;${newline.character}&lt;/rewriteNewlines&gt;
+	 * &nbsp;&nbsp;&lt;/merge&gt;
+	 * &lt;/mergers&gt;
+	 * </pre>
+	 *
+	 * @required
+	 * @parameter
+	 */
+	private transient Merger[] mergers;
 
-    /**
-     * Opens an OutputStream, based on the supplied file
-     * @param target {@linkplain File}
-     * @return {@linkplain OutputStream}
-     * @throws MojoExecutionException
-     */
-    protected OutputStream initOutput(final File file)
-        throws MojoExecutionException {
-        // stream to return
-        final OutputStream stream;
-        // plenty of things can go wrong...
-        try {
-            // directory?
-            if (file.isDirectory()) {
-            throw new MojoExecutionException("File "
-                + file.getAbsolutePath() + " is directory!");
-            }
-            // already exists && can't remove it?
-            if (file.exists() && !file.delete()) {
-            throw new MojoExecutionException("Could not remove file: "
-                + file.getAbsolutePath());
-            }
-            // get directory above file file
-            final File fileDirectory = file.getParentFile();
-            // does not exist && create it?
-            if (!fileDirectory.exists() && !fileDirectory.mkdirs()) {
-            throw new MojoExecutionException(
-                "Could not create directory: "
-                    + fileDirectory.getAbsolutePath());
-            }
-            // moar wtf: parent directory is no directory?
-            if (!fileDirectory.isDirectory()) {
-            throw new MojoExecutionException("Not a directory: "
-                + fileDirectory.getAbsolutePath());
-            }
-            // file file is for any reason not creatable?
-            if (!file.createNewFile()) {
-            throw new MojoExecutionException("Could not create file: "
-                + file.getAbsolutePath());
-            }
-            // finally create some file
-            stream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new MojoExecutionException("Could not find file: "
-                + file.getAbsolutePath(), e);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not write to file: "
-                + file.getAbsolutePath(), e);
-        }
-        // return
-        return stream;
-    }
+	/**
+	 * Opens an OutputStream, based on the supplied file
+	 * 
+	 * @param target
+	 *            {@linkplain File}
+	 * @return {@linkplain OutputStream}
+	 * @throws MojoExecutionException
+	 */
+	protected OutputStream initOutput(final File file) throws MojoExecutionException {
+		// stream to return
+		final OutputStream stream;
+		// plenty of things can go wrong...
+		try {
+			// directory?
+			if (file.isDirectory()) {
+				throw new MojoExecutionException("File " + file.getAbsolutePath() + " is directory!");
+			}
+			// already exists && can't remove it?
+			if (file.exists() && !file.delete()) {
+				throw new MojoExecutionException("Could not remove file: " + file.getAbsolutePath());
+			}
+			// get directory above file file
+			final File fileDirectory = file.getParentFile();
+			// does not exist && create it?
+			if (!fileDirectory.exists() && !fileDirectory.mkdirs()) {
+				throw new MojoExecutionException("Could not create directory: " + fileDirectory.getAbsolutePath());
+			}
+			// moar wtf: parent directory is no directory?
+			if (!fileDirectory.isDirectory()) {
+				throw new MojoExecutionException("Not a directory: " + fileDirectory.getAbsolutePath());
+			}
+			// file file is for any reason not creatable?
+			if (!file.createNewFile()) {
+				throw new MojoExecutionException("Could not create file: " + file.getAbsolutePath());
+			}
+			// finally create some file
+			stream = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new MojoExecutionException("Could not find file: " + file.getAbsolutePath(), e);
+		} catch (IOException e) {
+			throw new MojoExecutionException("Could not write to file: " + file.getAbsolutePath(), e);
+		}
+		// return
+		return stream;
+	}
 
-    /**
-     * Opens an InputStream, based on the supplied file
-     * @param target {@linkplain File}
-     * @return {@linkplain InputStream}
-     * @throws MojoExecutionException
-     */
-    protected InputStream initInput(final File file)
-        throws MojoExecutionException {
-        InputStream stream = null;
-        try {
-            if (file.isDirectory()) {
-                throw new MojoExecutionException("File "
-                    + file.getAbsolutePath()
-                    + " is directory!");
-            }
-            if (!file.exists()) {
-                throw new MojoExecutionException("File "
-                    + file.getAbsolutePath()
-                    + " does not exist!");
-            }
-            stream = new FileInputStream(file);
-            //append to outfile here
-        } catch (FileNotFoundException e) {
-            throw new MojoExecutionException("Could not find file: "
-                + file.getAbsolutePath(), e);
-        }
-        return stream;
-    }
+	/**
+	 * Opens an InputStream, based on the supplied file
+	 * 
+	 * @param target
+	 *            {@linkplain File}
+	 * @return {@linkplain InputStream}
+	 * @throws MojoExecutionException
+	 */
+	protected InputStream initInput(final File file) throws MojoExecutionException {
+		InputStream stream = null;
+		try {
+			if (file.isDirectory()) {
+				throw new MojoExecutionException("File " + file.getAbsolutePath() + " is a directory!");
+			}
+			if (!file.exists()) {
+				throw new MojoExecutionException("File " + file.getAbsolutePath() + " does not exist!");
+			}
+			stream = new FileInputStream(file);
+			// append to outfile here
+		} catch (FileNotFoundException e) {
+			throw new MojoExecutionException("Could not find file: " + file.getAbsolutePath(), e);
+		}
+		return stream;
+	}
 
-    /**
-     * Factory Execute
-     * @throws MojoExecutionException
-     * @throws MojoFailureException
-     */
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        // iterate through all <merge />
-        for (Merger merger : mergers) {
-            // get target file name...
-            final File target = merger.getTarget();
-            // get list of source files
-            final List<File> sources = Arrays.asList(merger.getSources());
-            // ...and use a stream
-            final OutputStream targetStream = initOutput(target);
-            // iterate source files
-            for (File source : sources) {
-                final InputStream sourceStream = initInput(source);
-                // append
-                appendStream(sourceStream, targetStream);
-                // close source
-                if (null != sourceStream) {
-                    try {
-                        sourceStream.close();
-                    } catch (IOException e) {
-                        throw new MojoExecutionException(
-                            "Could not close file: "
-                                + source.getAbsolutePath(), e);
-                    }
-                }
-            }
-            // close target
-            if (null != targetStream) {
-                try {
-                    targetStream.close();
-                } catch (IOException e) {
-                    throw new MojoExecutionException("Could not close file: "
-                        + target.getAbsolutePath(), e);
-                }
-            }
-        }
-    }
+	/**
+	 * Factory Execute
+	 * 
+	 * @throws MojoExecutionException
+	 * @throws MojoFailureException
+	 */
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		OutputStream targetStream = null;
+		File[] sources = null;
+		ArrayList<InputStream> sourcesIs = null;
+		// iterate through all <merge />
+		for (Merger merger : mergers) {
+			// Initialize input streams
+			sources = merger.getSources();
+			sourcesIs = new ArrayList<InputStream>(sources.length);
+			for (File source : sources) {
+				sourcesIs.add(initInput(source));
+			}
+			// write to file
+			targetStream = initOutput(merger.getTarget());
+			writeOutput(new SequenceInputStream(Collections.enumeration(sourcesIs)), targetStream);
+		}
+	}
 
-    /**
-     * Appends inputstream to outputstream
-     * @param input {@linkplain InputStream}
-     * @param output {@linkplain OutputStream}
-     * @throws MojoExecutionException
-     */
-    protected void appendStream(final InputStream input,
-        final OutputStream output) throws MojoExecutionException {
-        // prebuffer
-        int character;
-        try {
-            // get line seperator, based on system
-            final String newLine = System.getProperty("line.separator");
-            // read & write
-            while ((character = input.read()) != -1) {
-                output.write(character);
-            }
-            // append newline
-            output.write(newLine.getBytes());
-            // flush
-            output.flush();
-        } catch (IOException e) {
-            throw new MojoExecutionException("Error in buffering/writing "
-                + e.getMessage(), e);
-        }
-    }
+	/**
+	 * Appends sequenceinputstream to outputstream
+	 * 
+	 * @param sequenceInput
+	 * @param output
+	 * @throws MojoExecutionException
+	 */
+	protected void writeOutput(final SequenceInputStream sequenceInput, final OutputStream output)
+			throws MojoExecutionException {
+		// prebuffer
+		int character;
+		try {
+			// read & write
+			while ((character = sequenceInput.read()) != -1) {
+				output.write(character);
+			}
+			// flush
+			output.flush();
+		} catch (IOException e) {
+			throw new MojoExecutionException("Error during output write.", e);
+		} finally {
+			// try to close stream
+			try {
+				output.close();
+			} catch (IOException e) {
+				throw new MojoExecutionException("Could not close output stream.", e);
+			}
+		}
+	}
 }
