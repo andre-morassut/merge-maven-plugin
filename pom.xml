@@ -33,6 +33,15 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>am</id>
+      <name>André Morassut</name>
+      <email>andre.morassut@gmail.com</email>
+      <roles>
+        <role>contributor</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>    
   </developers>
   
   <properties>
@@ -41,7 +50,7 @@
   
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/rob19780114/merge-maven-plugin</url>
+    <url>https://github.com/andre-morassut/merge-maven-plugin</url>
   </issueManagement>
 
   <distributionManagement>
@@ -58,9 +67,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:https://github.com/rob19780114/merge-maven-plugin.git</connection>
-    <url>https://github.com/rob19780114/merge-maven-plugin.git</url>
-    <developerConnection>scm:git:https://github.com/rob19780114/merge-maven-plugin.git</developerConnection>
+    <connection>scm:git:https://github.com/andre-morassut/merge-maven-plugin.git</connection>
+    <url>https://github.com/andre-morassut/merge-maven-plugin.git</url>
+    <developerConnection>scm:git:https://github.com/andre-morassut/merge-maven-plugin.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
