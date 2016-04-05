@@ -1,5 +1,6 @@
 package org.zcore.maven;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -124,49 +127,23 @@ public class MergeMojo extends AbstractMojo {
 	 * @throws MojoFailureException
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		OutputStream targetStream = null;
 		File[] sources = null;
 		ArrayList<InputStream> sourcesIs = null;
 		// iterate through all <merge />
 		for (Merger merger : mergers) {
 			// Initialize input streams
 			sources = merger.getSources();
-			sourcesIs = new ArrayList<InputStream>(sources.length);
+			sourcesIs = new ArrayList<InputStream>(sources.length * 2);
 			for (File source : sources) {
-				sourcesIs.add(initInput(source));
+				sourcesIs.add(initInput(source)); // add source stream
+				sourcesIs.add(new ByteArrayInputStream(System.getProperty("line.separator").getBytes())); // add line separator
 			}
 			// write to file
-			targetStream = initOutput(merger.getTarget());
-			writeOutput(new SequenceInputStream(Collections.enumeration(sourcesIs)), targetStream);
-		}
-	}
-
-	/**
-	 * Appends sequenceinputstream to outputstream
-	 * 
-	 * @param sequenceInput
-	 * @param output
-	 * @throws MojoExecutionException
-	 */
-	protected void writeOutput(final SequenceInputStream sequenceInput, final OutputStream output)
-			throws MojoExecutionException {
-		// prebuffer
-		int character;
-		try {
-			// read & write
-			while ((character = sequenceInput.read()) != -1) {
-				output.write(character);
-			}
-			// flush
-			output.flush();
-		} catch (IOException e) {
-			throw new MojoExecutionException("Error during output write.", e);
-		} finally {
-			// try to close stream
 			try {
-				output.close();
+				Files.copy(new SequenceInputStream(Collections.enumeration(sourcesIs)), merger.getTarget().toPath(),
+						StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
-				throw new MojoExecutionException("Could not close output stream.", e);
+				throw new MojoExecutionException("Error during output write.", e);
 			}
 		}
 	}
