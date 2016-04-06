@@ -23,6 +23,8 @@ import org.apache.maven.plugin.MojoFailureException;
  *
  * @author Robert Heine
  * @author André Morassut
+ * @goal merge
+ * @requiresProject true
  */
 public class MergeMojo extends AbstractMojo {
 

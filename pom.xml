@@ -136,6 +136,20 @@
             </reports>
           </reportSet>
         </reportSets>
+				<configuration>
+					<tags>
+						<tag>
+							<name>goal</name>
+							<placement>t</placement>
+							<head>Maven goal annotation value:</head>
+						</tag>
+						<tag>
+							<name>requiresProject</name>
+							<placement>t</placement>
+							<head>Maven requiresProject annotation value:</head>
+						</tag>						
+					</tags>
+				</configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
