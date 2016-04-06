@@ -6,7 +6,7 @@ import java.util.Arrays;
 /**
  * PoJo holding information for text file merging
  * 
- * @author Robert Heine <robert.heine@zcore.org>
+ * @author Robert Heine
  *
  */
 public class Merger {
@@ -37,7 +37,7 @@ public class Merger {
 	/**
 	 * Returns the target filename
 	 * 
-	 * @return {@linkplain File}
+	 * @return {@linkplain File} target file
 	 */
 	public File getTarget() {
 		return target;
@@ -55,7 +55,7 @@ public class Merger {
 	/**
 	 * Returns rewriting newlines
 	 * 
-	 * @return
+	 * @return rewriteNewLines attribute
 	 */
 	public String getRewriteNewlines() {
 		return rewriteNewlines;
@@ -64,7 +64,7 @@ public class Merger {
 	/**
 	 * Overriding toString() here for debugging
 	 * 
-	 * @return {@linkplain String}
+	 * @return {@linkplain String} string representation
 	 */
 	@Override
 	public String toString() {
