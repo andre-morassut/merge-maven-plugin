@@ -21,9 +21,8 @@ import org.apache.maven.plugin.MojoFailureException;
 /**
  * Mojo for merging supplied text files
  *
- * @author Robert Heine <robert.heine@zcore.org>
- * @goal merge
- * @requiresProject
+ * @author Robert Heine
+ * @author André Morassut
  */
 public class MergeMojo extends AbstractMojo {
 
@@ -52,10 +51,9 @@ public class MergeMojo extends AbstractMojo {
 	/**
 	 * Opens an OutputStream, based on the supplied file
 	 * 
-	 * @param target
-	 *            {@linkplain File}
-	 * @return {@linkplain OutputStream}
-	 * @throws MojoExecutionException
+	 * @param file {@linkplain File} the output file
+	 * @return {@linkplain OutputStream} the output stream to the parameter file
+	 * @throws MojoExecutionException if file is a directory, not writable, or other problem
 	 */
 	protected OutputStream initOutput(final File file) throws MojoExecutionException {
 		// stream to return
@@ -98,8 +96,9 @@ public class MergeMojo extends AbstractMojo {
 	/**
 	 * Opens an InputStream, based on the supplied file
 	 * 
-	 * @param file {@linkplain File}
-	 * @throws MojoExecutionException
+	 * @param file {@linkplain File} the source file
+	 * @return {@linkplain InputStream} the input stream of the parameter file
+	 * @throws MojoExecutionException If file has a problem
 	 */
 	protected InputStream initInput(final File file) throws MojoExecutionException {
 		InputStream stream = null;
@@ -121,8 +120,8 @@ public class MergeMojo extends AbstractMojo {
 	/**
 	 * Factory Execute
 	 * 
-	 * @throws MojoExecutionException
-	 * @throws MojoFailureException
+	 * @throws MojoExecutionException if file write operation went wrong
+	 * @throws MojoFailureException for plugin failure
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File[] sources = null;
