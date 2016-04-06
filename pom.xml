@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.zcore.maven</groupId>
   <artifactId>merge-maven-plugin</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.4</version>
   <packaging>maven-plugin</packaging>
 
   <name>Maven Merge Plugin</name>
@@ -70,7 +70,7 @@
     <connection>scm:git:https://github.com/andre-morassut/merge-maven-plugin.git</connection>
     <url>https://github.com/andre-morassut/merge-maven-plugin.git</url>
     <developerConnection>scm:git:https://github.com/andre-morassut/merge-maven-plugin.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>merge-maven-plugin-0.0.4</tag>
   </scm>
 
   <prerequisites>
