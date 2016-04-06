@@ -98,9 +98,7 @@ public class MergeMojo extends AbstractMojo {
 	/**
 	 * Opens an InputStream, based on the supplied file
 	 * 
-	 * @param target
-	 *            {@linkplain File}
-	 * @return {@linkplain InputStream}
+	 * @param file {@linkplain File}
 	 * @throws MojoExecutionException
 	 */
 	protected InputStream initInput(final File file) throws MojoExecutionException {
