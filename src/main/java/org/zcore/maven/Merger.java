@@ -7,7 +7,7 @@ import java.util.Arrays;
  * PoJo holding information for text file merging
  * 
  * @author Robert Heine
- *
+ * @author Vincent van ’t Zand
  */
 public class Merger {
 
@@ -33,6 +33,14 @@ public class Merger {
 	 * @parameter
 	 */
 	private transient String rewriteNewlines;
+
+	/**
+	 * This determines if a new line character is written after each file used in the merge. The
+	 * default value is false for backwards compatibility.
+	 * 
+	 * @parameter
+	 */
+	private transient Boolean newLineBetween = false;
 
 	/**
 	 * Returns the target filename
@@ -62,6 +70,15 @@ public class Merger {
 	}
 
 	/**
+	 * Returns if new lines should be added between each of the files to merge
+	 *
+	 * @return Value of newLineBetween attribute
+	 */
+	public Boolean getNewLineBetween() {
+		return newLineBetween;
+	}
+	
+	/**
 	 * Overriding toString() here for debugging
 	 * 
 	 * @return {@linkplain String} string representation
@@ -82,6 +99,7 @@ public class Merger {
 		if (null != rewriteNewlines) {
 			buffer.append("[newline: ").append(rewriteNewlines).append(']');
 		}
+		buffer.append("[newLineBetween: ").append(getNewLineBetween() ? "yes" : "no").append(']');
 		// return
 		return buffer.toString();
 	}
