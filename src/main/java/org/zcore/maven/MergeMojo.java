@@ -135,7 +135,9 @@ public class MergeMojo extends AbstractMojo {
 			sourcesIs = new ArrayList<InputStream>(sources.length * 2);
 			for (File source : sources) {
 				sourcesIs.add(initInput(source)); // add source stream
-				sourcesIs.add(new ByteArrayInputStream(System.getProperty("line.separator").getBytes())); // add line separator
+				if (getNewLineBetween()) {
+					sourcesIs.add(new ByteArrayInputStream(System.getProperty("line.separator").getBytes())); // add line separator
+				}
 			}
 			// write to file
 			try {
