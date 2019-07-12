@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
  *
  * @author Robert Heine
  * @author André Morassut
+ * @author Vincent van ’t Zand
  * @goal merge
  * @requiresProject true
  */
@@ -52,7 +53,7 @@ public class MergeMojo extends AbstractMojo {
 
 	/**
 	 * Opens an OutputStream, based on the supplied file
-	 * 
+	 *
 	 * @param file {@linkplain File} the output file
 	 * @return {@linkplain OutputStream} the output stream to the parameter file
 	 * @throws MojoExecutionException if file is a directory, not writable, or other problem
@@ -97,7 +98,7 @@ public class MergeMojo extends AbstractMojo {
 
 	/**
 	 * Opens an InputStream, based on the supplied file
-	 * 
+	 *
 	 * @param file {@linkplain File} the source file
 	 * @return {@linkplain InputStream} the input stream of the parameter file
 	 * @throws MojoExecutionException If file has a problem
@@ -121,7 +122,7 @@ public class MergeMojo extends AbstractMojo {
 
 	/**
 	 * Factory Execute
-	 * 
+	 *
 	 * @throws MojoExecutionException if file write operation went wrong
 	 * @throws MojoFailureException for plugin failure
 	 */
@@ -135,7 +136,7 @@ public class MergeMojo extends AbstractMojo {
 			sourcesIs = new ArrayList<InputStream>(sources.length * 2);
 			for (File source : sources) {
 				sourcesIs.add(initInput(source)); // add source stream
-				if (getNewLineBetween()) {
+				if (merger.getNewLineBetween()) {
 					sourcesIs.add(new ByteArrayInputStream(System.getProperty("line.separator").getBytes())); // add line separator
 				}
 			}
