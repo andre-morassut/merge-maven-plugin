@@ -17,38 +17,42 @@ import java.util.Collections;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Mojo for merging supplied text files
+ * Merge specified text files into a new file.
  *
  * @author Robert Heine
  * @author André Morassut
  * @author Vincent van ’t Zand
- * @goal merge
  * @requiresProject true
  */
+@Mojo(name = "merge", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class MergeMojo extends AbstractMojo {
 
 	/**
-	 * Configuration from file
-	 *
 	 * <pre>
-	 * &lt;mergers&gt;
-	 * &nbsp;&nbsp;&lt;merge&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;target&gt;${build.outputDirectory}/target.txt&lt;/target&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;sources&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/${property}/application.txt&lt;/source&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/extended/application.txt&lt;/source&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/config/default/application.txt&lt;/source&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;
-	 * &nbsp;&nbsp;&nbsp;&nbsp;&lt;rewriteNewlines&gt;${newline.character}&lt;/rewriteNewlines&gt;
-	 * &nbsp;&nbsp;&lt;/merge&gt;
-	 * &lt;/mergers&gt;
-	 * </pre>
+	 * Configuration through the POM file:
 	 *
-	 * @required
-	 * @parameter
+	 * &lt;configuration>
+	 *   &lt;mergers>
+	 *     &lt;merger>
+	 *       &lt;sources>
+	 *       &lt;target>${build.outputDirectory}/target.txt&lt;/target>
+	 *         &lt;source>src/main/config/${property}/application.txt&lt;/source>
+	 *         &lt;source>src/main/config/extended/application.txt&lt;/source>
+	 *         &lt;source>src/main/config/default/application.txt&lt;/source>
+	 *       &lt;/sources>
+	 *       &lt;rewriteNewlines>${newline.character}&lt;/rewriteNewlines>
+	 *       &lt;newLineBetween>false&lt;/newLineBetween>
+	 *     &lt;/merger>
+	 *   &lt;/mergers>
+	 * &lt;/configuration>
+	 * </pre>
 	 */
+	@Parameter(property = "mergers", required = true)
 	private transient Merger[] mergers;
 
 	/**
@@ -104,7 +108,7 @@ public class MergeMojo extends AbstractMojo {
 	 * @throws MojoExecutionException If file has a problem
 	 */
 	protected InputStream initInput(final File file) throws MojoExecutionException {
-		InputStream stream = null;
+		InputStream stream;
 		try {
 			if (file.isDirectory()) {
 				throw new MojoExecutionException("File " + file.getAbsolutePath() + " is a directory!");

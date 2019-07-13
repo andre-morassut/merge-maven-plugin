@@ -1,5 +1,7 @@
 package org.zcore.maven;
 
+import org.apache.maven.plugins.annotations.Parameter;
+
 import java.io.File;
 import java.util.Arrays;
 
@@ -13,33 +15,27 @@ public class Merger {
 
 	/**
 	 * The target file, where all other files are copied to
-	 *
-	 * @parameter
-	 * @required
 	 */
+	@Parameter(property = "target", required = true)
 	private transient File target;
 
 	/**
 	 * Array of possible source files
-	 *
-	 * @parameter
-	 * @required
 	 */
+	@Parameter(property = "sources", required = true)
 	private transient File[] sources;
 
 	/**
 	 * If this is set, strip all newlines and rewrite them with specified characters
-	 *
-	 * @parameter
 	 */
+	@Parameter(property = "rewriteNewlines", required = false)
 	private transient String rewriteNewlines;
 
 	/**
 	 * This determines if a new line character is written after each file used in the merge. The
 	 * default value is true for backwards compatibility.
-	 *
-	 * @parameter
 	 */
+	@Parameter(property = "newLineBetween", required = false, defaultValue = "true")
 	private transient Boolean newLineBetween = true;
 
 	/**
@@ -91,11 +87,6 @@ public class Merger {
 		buffer.append("Merger [toString()=").append(super.toString()).append(']');
 		buffer.append("[target: ").append(getTarget().toString()).append(']');
 		buffer.append("[source: ").append(Arrays.asList(getSources().toString())).append(']');
-		/**
-		 * Append rewriting char for newlines
-		 *
-		 * @since 2013-02-12
-		 */
 		if (null != rewriteNewlines) {
 			buffer.append("[newline: ").append(rewriteNewlines).append(']');
 		}
