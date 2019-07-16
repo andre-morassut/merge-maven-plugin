@@ -5,15 +5,15 @@ import java.util.Arrays;
 
 /**
  * PoJo holding information for text file merging
- * 
- * @author Robert Heine
  *
+ * @author Robert Heine
+ * @author Vincent van ’t Zand
  */
 public class Merger {
 
 	/**
 	 * The target file, where all other files are copied to
-	 * 
+	 *
 	 * @parameter
 	 * @required
 	 */
@@ -21,7 +21,7 @@ public class Merger {
 
 	/**
 	 * Array of possible source files
-	 * 
+	 *
 	 * @parameter
 	 * @required
 	 */
@@ -29,14 +29,22 @@ public class Merger {
 
 	/**
 	 * If this is set, strip all newlines and rewrite them with specified characters
-	 * 
+	 *
 	 * @parameter
 	 */
 	private transient String rewriteNewlines;
 
 	/**
+	 * This determines if a new line character is written after each file used in the merge. The
+	 * default value is true for backwards compatibility.
+	 *
+	 * @parameter
+	 */
+	private transient Boolean newLineBetween = true;
+
+	/**
 	 * Returns the target filename
-	 * 
+	 *
 	 * @return {@linkplain File} target file
 	 */
 	public File getTarget() {
@@ -45,7 +53,7 @@ public class Merger {
 
 	/**
 	 * Returns the array of source filenames
-	 * 
+	 *
 	 * @return array of {@linkplain File}
 	 */
 	public File[] getSources() {
@@ -54,7 +62,7 @@ public class Merger {
 
 	/**
 	 * Returns rewriting newlines
-	 * 
+	 *
 	 * @return rewriteNewLines attribute
 	 */
 	public String getRewriteNewlines() {
@@ -62,8 +70,17 @@ public class Merger {
 	}
 
 	/**
+	 * Returns if new lines should be added between each of the files to merge
+	 *
+	 * @return Value of newLineBetween attribute
+	 */
+	public Boolean getNewLineBetween() {
+		return newLineBetween;
+	}
+
+	/**
 	 * Overriding toString() here for debugging
-	 * 
+	 *
 	 * @return {@linkplain String} string representation
 	 */
 	@Override
@@ -76,12 +93,13 @@ public class Merger {
 		buffer.append("[source: ").append(Arrays.asList(getSources().toString())).append(']');
 		/**
 		 * Append rewriting char for newlines
-		 * 
+		 *
 		 * @since 2013-02-12
 		 */
 		if (null != rewriteNewlines) {
 			buffer.append("[newline: ").append(rewriteNewlines).append(']');
 		}
+		buffer.append("[newLineBetween: ").append(getNewLineBetween() ? "yes" : "no").append(']');
 		// return
 		return buffer.toString();
 	}

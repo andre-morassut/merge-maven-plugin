@@ -1,5 +1,5 @@
 # merge-maven-plugin
-Maven(3) plugin which merges multiple files into one
+Maven(3) plugin which merges multiple text files into one
 
 ## Simple Configuration example
 <pre>
@@ -40,6 +40,7 @@ Maven(3) plugin which merges multiple files into one
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/resources/input1.txt&lt;/source&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;source&gt;src/main/resources/inputn.txt&lt;/source&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/sources&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;newLineBetween&gt;false&lt;/newLineBetween&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/merger&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/mergers&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/configuration&gt;
@@ -51,5 +52,19 @@ Maven(3) plugin which merges multiple files into one
 </pre>
 
 ## How to run?
-At the moment do <code>mvn org.zcore.maven:merge-maven-plugin:merge</code>.
-<small>This will be easier in the future</small>
+From the CLI use <code>mvn org.zcore.maven:merge-maven-plugin:merge</code>, but within the POM it can be easily connected to a phase (most common would be <code>package</code>):
+
+<pre>
+&lt;plugin&gt;
+&nbsp;…
+&nbsp;&lt;executions&gt;
+&nbsp;&nbsp;&lt;execution&gt;
+&nbsp;&nbsp;&nbsp;&lt;id&gt;merge-files&lt;/id&gt;
+&nbsp;&nbsp;&nbsp;&lt;phase&gt;package&lt;/phase&gt;
+&nbsp;&nbsp;&nbsp;&lt;goals&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;goal&gt;merge&lt;/goal&gt;
+&nbsp;&nbsp;&nbsp;&lt;/goals&gt;
+&nbsp;&nbsp;&lt;/execution&gt;
+&nbsp;&lt;/executions&gt;
+&lt;/plugin&gt;
+</pre>
